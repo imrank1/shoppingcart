@@ -20,18 +20,17 @@ class ShoppingCart extends Component {
     this.unsubscribe()
   }
 
-  removeCartItem = (e) => {
+  removeCartItem = (itemId) => {
     debugger;
-    this.props.store.dispatch(removeItemFromCart(this.props.id))
+    this.props.store.dispatch(removeItemFromCart(itemId))
   }
 
   render() {
     const {store} = this.props;
     const state = store.getState()
-    debugger;
     let itemsInCart = state.cartItems.map((cartItem) =>
-     <div key={cartItem.id}> {cartItem.name}, Price: {cartItem.price}
-            <button onClick={this.removeCartItem}> Remove</button>
+     <div> {cartItem.name}, Price: {cartItem.price}
+            <button onClick={() => this.removeCartItem(cartItem.id)}> Remove</button>
      </div>
     )
 

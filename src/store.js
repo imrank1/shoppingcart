@@ -1,5 +1,6 @@
 import { createStore } from 'redux'
 import {ADD_ITEM_TO_CART} from './actions/actions.js'
+import {REMOVE_ITEM_FROM_CART} from './actions/actions.js'
 
 const initialState = {
   cartItems: [],
@@ -14,7 +15,15 @@ function shoppingCartApp(state = initialState, action) {
       const itemToAdd = state.items.find(function(item) {
         return item.id == action.itemId;
       })
-      debugger;
+
+      // const existingItem = state.cartItems.find(function(item){
+      //   return item.id == action.itemId;
+      // })
+      //
+      // if (existingItem) {
+      //
+      // }
+
       return Object.assign({}, state, {
         cartItems: [
           ...state.cartItems,
@@ -27,15 +36,36 @@ function shoppingCartApp(state = initialState, action) {
           }
         ],
         items: state.items.map((item, index) =>{
-          debugger;
           if (item.id == action.itemId) {
             return Object.assign({}, item, {
               quantity : --item.quantity
             })
+          } else {
+            return item
           }
-          return item
         })
       })
+      break;
+      case REMOVE_ITEM_FROM_CART:
+        const itemToRemove = state.items.find(function(item) {
+          return item.id == action.itemId;
+        })
+        debugger;
+        return Object.assign({}, state, {
+          cartItems: state.cartItems.filter((item, index) => {
+            return item.id != itemToRemove.id
+          }),
+          items: state.items.map((item, index) =>{
+            if (item.id == action.itemId) {
+              return Object.assign({}, item, {
+                quantity : ++item.quantity
+              })
+            } else {
+              return item
+            }
+          })
+        })
+      break;
       default:
       return state
   }

@@ -1,5 +1,5 @@
 export const ADD_ITEM_TO_CART = 'ADD_ITEM_TO_CART';
-export const REMOVE_ITEM_TO_CART = 'REMOVE_ITEM_TO_CART';
+export const REMOVE_ITEM_FROM_CART = 'REMOVE_ITEM_FROM_CART';
 export const CLEAR_CART = 'CLEAR_CART';
 export const CHECKOUT = 'CHECKOUT';
 
@@ -9,7 +9,7 @@ export function addItemToCart(itemId) {
 
 
 export function removeItemFromCart(itemId) {
-  return {type: REMOVE_ITEM_TO_CART, itemId: itemId}
+  return {type: REMOVE_ITEM_FROM_CART, itemId: itemId}
 }
 
 export function clearCart() {
