@@ -1,5 +1,5 @@
 import { createStore } from 'redux'
-import * as actions from './actions/actions.js'
+import {ADD_ITEM_TO_CART} from './actions/actions.js'
 
 const initialState = {
   cartItems: [],
@@ -10,20 +10,35 @@ const initialState = {
 
 function shoppingCartApp(state = initialState, action) {
   switch(action.type) {
-    case actions.ADD_ITEM_TO_CART:
+    case  ADD_ITEM_TO_CART:
+      const itemToAdd = state.items.find(function(item) {
+        return item.id == action.itemId;
+      })
+      debugger;
       return Object.assign({}, state, {
         cartItems: [
           ...state.cartItems,
           {
-            id: action.itemId
+            id: itemToAdd.id,
+            name: itemToAdd.name,
+            price: itemToAdd.price,
+            quantity: itemToAdd.quantity,
+            description: itemToAdd.description
           }
-        ]
+        ],
+        items: state.items.map((item, index) =>{
+          debugger;
+          if (item.id == action.itemId) {
+            return Object.assign({}, item, {
+              quantity : --item.quantity
+            })
+          }
+          return item
+        })
       })
       default:
       return state
   }
-
-  return state;
 }
 
 export default function configureStore() {

@@ -1,23 +1,20 @@
 import React, { Component } from 'react';
-import Item from './components/Item';
 import ShoppingCart from './components/ShoppingCart';
-
-import logo from './logo.svg';
+import configureStore from './store.js'
 import './App.css';
 
+const store = configureStore();
+
 class App extends Component {
+  constructor(props) {
+      super()
+      this.store = props.store;
+  }
+
   render() {
     return (
       <div className="App">
-      <ShoppingCart></ShoppingCart>
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload....Imran Khawaja
-        </p>
-        <Item></Item>
+      <ShoppingCart store={store}></ShoppingCart>
       </div>
     );
   }

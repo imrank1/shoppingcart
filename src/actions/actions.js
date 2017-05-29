@@ -4,12 +4,12 @@ export const CLEAR_CART = 'CLEAR_CART';
 export const CHECKOUT = 'CHECKOUT';
 
 export function addItemToCart(itemId) {
-  return {type: ADD_ITEM_TO_CART, action: {itemId: itemId}}
+  return {type: ADD_ITEM_TO_CART, itemId: itemId}
 }
 
 
 export function removeItemFromCart(itemId) {
-  return {type: REMOVE_ITEM_TO_CART, action: {itemId: itemId}}
+  return {type: REMOVE_ITEM_TO_CART, itemId: itemId}
 }
 
 export function clearCart() {
