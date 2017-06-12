@@ -16,41 +16,58 @@ function shoppingCartApp(state = initialState, action) {
         return item.id == action.itemId;
       })
 
-      // const existingItem = state.cartItems.find(function(item){
-      //   return item.id == action.itemId;
-      // })
-      //
-      // if (existingItem) {
-      //
-      // }
-
-      return Object.assign({}, state, {
-        cartItems: [
-          ...state.cartItems,
-          {
-            id: itemToAdd.id,
-            name: itemToAdd.name,
-            price: itemToAdd.price,
-            quantity: itemToAdd.quantity,
-            description: itemToAdd.description
-          }
-        ],
-        items: state.items.map((item, index) =>{
-          if (item.id == action.itemId) {
-            return Object.assign({}, item, {
-              quantity : --item.quantity
-            })
-          } else {
-            return item
-          }
-        })
+      const existingItem = state.cartItems.find(function(item){
+        return item.id == action.itemId;
       })
+        debugger;
+      if (existingItem) {
+          return Object.assign({}, state, {
+              cartItems: state.cartItems.map((cartItem, index) =>{
+                if (cartItem.id == existingItem.id) {
+                  return Object.assign({}, cartItem, { quantity: cartItem.quantity++})
+                } else {
+                  return cartItem
+                }
+              }),
+              items: state.items.map((item, index) =>{
+                  if (item.id == action.itemId) {
+                      return Object.assign({}, item, {
+                          quantity : --item.quantity
+                      })
+                  } else {
+                      return item
+                  }
+              })
+          })
+      } else {
+        return Object.assign({}, state, {
+          cartItems: [
+            ...state.cartItems,
+            {
+              id: itemToAdd.id,
+              name: itemToAdd.name,
+              price: itemToAdd.price,
+              quantity: 1,
+              description: itemToAdd.description
+            }
+          ],
+          items: state.items.map((item, index) =>{
+            if (item.id == action.itemId) {
+              return Object.assign({}, item, {
+                quantity : --item.quantity
+              })
+            } else {
+              return item
+            }
+          })
+        })
+      }
+
       break;
       case REMOVE_ITEM_FROM_CART:
         const itemToRemove = state.items.find(function(item) {
           return item.id == action.itemId;
         })
-        debugger;
         return Object.assign({}, state, {
           cartItems: state.cartItems.filter((item, index) => {
             return item.id != itemToRemove.id

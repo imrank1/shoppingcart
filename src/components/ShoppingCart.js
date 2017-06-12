@@ -6,13 +6,13 @@ class ShoppingCart extends Component {
   constructor(props) {
     super(props)
     const {store} = props
-    this.state = {cartItems: store.getState().cartItems.length}
+    this.state = store.getState()
   }
 
   componentDidMount() {
     const { store } = this.props;
     this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
+      this.setState(store.getState())
     )
   }
 
@@ -21,18 +21,22 @@ class ShoppingCart extends Component {
   }
 
   removeCartItem = (itemId) => {
-    debugger;
+    // debugger;
     this.props.store.dispatch(removeItemFromCart(itemId))
   }
 
   render() {
     const {store} = this.props;
-    const state = store.getState()
-    let itemsInCart = state.cartItems.map((cartItem) =>
-     <div> {cartItem.name}, Price: {cartItem.price}
+    debugger;
+    let itemsInCart = null;
+    if (this.state.cartItems.length) {
+      itemsInCart = this.state.cartItems.map((cartItem) =>
+          <div key={cartItem.id}> {cartItem.name}, Price: {cartItem.price}, Qty: {cartItem.quantity}
             <button onClick={() => this.removeCartItem(cartItem.id)}> Remove</button>
-     </div>
-    )
+          </div>)
+    } else {
+      itemsInCart = (<div></div>)
+    }
 
     return (
       <div className="ShoppingCart">
@@ -43,7 +47,7 @@ class ShoppingCart extends Component {
 
 
         <div>
-        Items in the cart:{state.cartItems.length}
+        Items in the cart:{this.state.cartItems.length}
         <ul>{itemsInCart}</ul>
 
         </div>
