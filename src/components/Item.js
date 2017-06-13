@@ -1,66 +1,70 @@
 import React, { Component } from 'react';
-import {addItemToCart} from '../actions/actions.js'
+import {addItemToCart} from '../actions.js'
+import '../App.css';
+
+/**
+ * Component to model an Item that can be added to the cart
+ */
 class Item extends Component {
   constructor(props) {
     super(props);
-    const {store} = props.store
-    this.state = {id: props.id,
-                  name: props.name,
-                  description: props.description,
-                  price: props.price,
-                  quantity: props.quantity};
+    this.state = this.props.store.getState().items.find(function(item){
+      return item.id === this.props.id
+    }.bind(this));
   }
 
+    /**
+     * Called when the component mounts.
+     *
+     * We subscribe to state changes and update our state with the item that the
+     * component was created for
+     */
   componentDidMount() {
     const { store } = this.props
-    this.unsubscribe = store.subscribe(() =>
-      this.forceUpdate()
+    this.unsubscribe = store.subscribe(() =>{
+      const item = store.getState().items.find(function(item){
+        return item.id === this.props.id
+      }.bind(this));
+      this.setState(item);}
     )
   }
 
+    /**
+     * When the component is going to unmount unsubscribe from the store
+     */
   componentWillUnmount() {
     this.unsubscribe()
   }
 
+    /**
+     * Dispatches and action to add an item to the cart
+     */
   handleAddItemToCart = () => {
     this.props.store.dispatch(addItemToCart(this.props.id))
   }
 
 
+    /**
+     * Renders and item
+     * @returns {XML}
+     */
   render() {
-    const {store} = this.props;
-    const state = store.getState().items.find(function(item){
-      return item.id === this.props.id
-    }.bind(this));
-
-
-    const canAddItem = state.quantity > 0;
-    let addItemElement = null;
-    if (canAddItem) {
-      addItemElement = <button onClick={this.handleAddItemToCart}>Add to cart</button>
-    } else {
-      addItemElement = <div> None Left! </div>
-    }
-
     return (
-
-      <div className="Item">
-        <div className="Item-header">
-          <img src="logo" className="itemImg" alt="" />
-          <div>{state.name}</div>
+      <div className="cartItem">
+        <div className="itemHeader">
+          <div>{this.state.name}</div>
         </div>
-        <p className="itemDescription">
-          {state.description}
-        </p>
 
         <div className="itemPrice">
-          {state.price}
+          Price: {this.state.price}
         </div>
 
         <div className="itemQuantity">
-          Quantity: {state.quantity}
+          Quantity: {this.state.quantity}
           </div>
-        {addItemElement}
+
+
+          {this.state.quantity > 0 ?(<button onClick={this.handleAddItemToCart}>Add to cart</button>) : <div> None Left! </div>}
       </div>
     );
   }

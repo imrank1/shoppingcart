@@ -14,7 +14,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-      <ShoppingCart store={store}></ShoppingCart>
+      <ShoppingCart store={store}/>
       </div>
     );
   }
