@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Item from './Item'
-import {removeItemFromCart, applyCoupon}  from '../actions.js'
+import {removeItemFromCart}  from '../actions.js'
 import '../App.css';
 
 
@@ -45,13 +45,6 @@ class ShoppingCart extends Component {
     this.props.store.dispatch(removeItemFromCart(itemId))
   }
 
-    /**
-     * Dispatches an action to apply the entered text as the coupon code
-     * @param e
-     */
-  handleCouponInput = (e) => {
-    this.props.store.dispatch(applyCoupon(e.target.value))
-  }
 
     /**
      * Returns a JSX for the items that have been added to the cart
@@ -64,10 +57,6 @@ class ShoppingCart extends Component {
       </div>)
   }
 
-  getPercentageOff () {
-      return this.state.hasValidCoupon ? this.state.coupon.percentageOff : 0
-  }
-
     /**
      * Calculates and returns the total based on the items that are in the cart
      *
@@ -76,10 +65,6 @@ class ShoppingCart extends Component {
      */
   getCartTotal () {
     let total = this.state.cartItems.reduce((acc, cartItem) => {return acc + cartItem.quantity * cartItem.price}, 0)
-
-    if(this.state.hasValidCoupon) {
-        total = total * this.getPercentageOff();
-    }
     return total
   }
 
@@ -91,7 +76,6 @@ class ShoppingCart extends Component {
      */
   render() {
     const {store} = this.props;
-    let couponKey = this.state.coupon.code === "NONE" ? "" : this.state.coupon.code;
     return (
       <div className="shoppingCart">
         <Item store={store} id="1"/>
@@ -102,9 +86,6 @@ class ShoppingCart extends Component {
         </div>
 
 
-        <div className="couponSection">
-            Coupon:<input type="text" value={couponKey} onChange={this.handleCouponInput}/>
-        </div>
 
         <div>Total: {this.getCartTotal()}</div>
         </div>

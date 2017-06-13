@@ -1,7 +1,6 @@
 import { createStore } from 'redux'
 import {ADD_ITEM_TO_CART} from './actions.js'
 import {REMOVE_ITEM_FROM_CART} from './actions.js'
-import {APPLY_COUPON} from './actions.js'
 
 /**
  * The initial state of our store.
@@ -28,16 +27,6 @@ const initialState = {
  */
 function reducer(state = [], action) {
   switch(action.type) {
-      /**
-       * Handles adding a coupon
-       */
-    case APPLY_COUPON:
-        if (action.couponKey === "SUMMERSALE") {
-          return Object.assign({}, state, { coupon: {code: "SUMMERSALE", percentageOff: .50}, hasValidCoupon: true})
-        } else {
-          return Object.assign({}, state, { coupon: {code: action.couponKey, percentageOff: 0}, hasValidCoupon: false})
-        }
-        break;
       /**
        * Handles adding an item to a cart
        *
