@@ -7,7 +7,7 @@ import {REMOVE_ITEM_FROM_CART} from './actions.js'
  *
  * We could set this up to get the state from a server response
  *
- * @type {{cartItems: Array, items: [*], coupon: {code: string, percentageOff: number}, hasValidCoupon: boolean}}
+ * @type {{cartItems: Array, items: [{}], coupon: {code: string, percentageOff: number}, hasValidCoupon: boolean}}
  */
 const initialState = {
   cartItems: [],
@@ -142,7 +142,7 @@ function reducer(state = [], action) {
         }
       break;
       default:
-      return state
+        return state
   }
 }
 
