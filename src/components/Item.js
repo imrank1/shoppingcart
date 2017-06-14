@@ -8,9 +8,7 @@ import '../App.css';
 class Item extends Component {
   constructor(props) {
     super(props);
-    this.state = this.props.store.getState().items.find(function(item){
-      return item.id === this.props.id
-    }.bind(this));
+    this.state = this.props.store.getState().items[this.props.id]
   }
 
     /**
@@ -20,12 +18,10 @@ class Item extends Component {
      * component was created for
      */
   componentDidMount() {
-    const { store } = this.props
+    const { store } = this.props;
     this.unsubscribe = store.subscribe(() =>{
-      const item = store.getState().items.find(function(item){
-        return item.id === this.props.id
-      }.bind(this));
-      this.setState(item);}
+      this.setState(store.getState().items[this.props.id]);
+        }
     )
   }
 
@@ -40,7 +36,7 @@ class Item extends Component {
      * Dispatches and action to add an item to the cart
      */
   handleAddItemToCart = () => {
-    this.props.store.dispatch(addItemToCart(this.props.id))
+    this.props.store.dispatch(addItemToCart(this.props.id));
   }
 
 

@@ -11,21 +11,23 @@ import {REMOVE_ITEM_FROM_CART} from './actions.js'
  */
 const initialState = {
   cartItems: [],
-  items : [{id: "1", name: "BatMan Legos", description: "Lego set from the Batman Lego Movie", price:"20.00", quantity:"5"},
-          {id: "2", name: "Lego Duplo Farm Set", description: "Lego Duplo Set with Farm Theme", price:"30.00", quantity:"3"}
-        ],
+  items : {
+            1: {id: 1, name: "BatMan Legos", description: "Lego set from the Batman Lego Movie", price: "20.00", quantity: "5"},
+            2: {id: 2, name: "Lego Duplo Farm Set", description: "Lego Duplo Set with Farm Theme", price: "30.00", quantity: "3"}
+         },
   coupon : {code: "NONE", percentageOff:0},
   hasValidCoupon: false
-}
+};
 
 /**
  * A pure function that applies the given action to the current state of the application
  *
  * @param state - The current state of the app
  * @param action - An action to be applied to the store
- * @returns {} - A new state
+ * @returns {{}} - A new state
  */
 function reducer(state = [], action) {
+    debugger;
   switch(action.type) {
       /**
        * Handles adding an item to a cart
@@ -36,9 +38,7 @@ function reducer(state = [], action) {
        *
        */
       case  ADD_ITEM_TO_CART:
-      const itemToAdd = state.items.find(function(item) {
-        return item.id == action.itemId;
-      })
+      const itemToAdd = state.items[action.itemId];
 
       const existingItem = state.cartItems.find(function(item){
         return item.id == action.itemId;
@@ -52,15 +52,16 @@ function reducer(state = [], action) {
                   return cartItem
                 }
               }),
-              items: state.items.map((item, index) =>{
-                  if (item.id == action.itemId) {
-                      return Object.assign({}, item, {
-                          quantity : --item.quantity
-                      })
-                  } else {
-                      return item
-                  }
-              })
+              items: Object.assign(...Object.keys(state.items).map(id => {
+                        let item = state.items[id]
+                        if (id == action.itemId) {
+                          return {[id]: Object.assign({}, item, {
+                              quantity : --item.quantity
+                          })}
+                        } else {
+                          return {[id]: item }
+                        }
+              }))
           })
       } else {
         return Object.assign({}, state, {
@@ -74,15 +75,16 @@ function reducer(state = [], action) {
               description: itemToAdd.description
             }
           ],
-          items: state.items.map((item, index) =>{
-            if (item.id == action.itemId) {
-              return Object.assign({}, item, {
-                quantity : --item.quantity
-              })
-            } else {
-              return item
-            }
-          })
+          items: Object.assign(...Object.keys(state.items).map(id => {
+                  let item = state.items[id]
+                  if (id == action.itemId) {
+                      return {[id]: Object.assign({}, item, {
+                          quantity : --item.quantity
+                      })}
+                  } else {
+                      return {[id]: item }
+                  }
+          }))
         })
       }
 
@@ -110,30 +112,32 @@ function reducer(state = [], action) {
                 return item;
               }
             }),
-            items: state.items.map((item, index) =>{
-              if (item.id == action.itemId) {
-                return Object.assign({}, item, {
-                  quantity : ++item.quantity
-                })
-              } else {
-                return item
-              }
-            })
+            items:Object.assign(...Object.keys(state.items).map(id => {
+                let item = state.items[id]
+                if (id == action.itemId) {
+                    return {[id]: Object.assign({}, item, {
+                        quantity : ++item.quantity
+                    })}
+                } else {
+                    return {[id]: item }
+                }
+            }))
           })
         } else {
           return Object.assign({}, state, {
             cartItems: state.cartItems.filter((item, index) => {
               return item.id != cartItem.id
             }),
-            items: state.items.map((item, index) =>{
-              if (item.id == action.itemId) {
-                return Object.assign({}, item, {
-                  quantity : ++item.quantity
-                })
-              } else {
-                return item
-              }
-            })
+            items:Object.assign(...Object.keys(state.items).map(id => {
+                let item = state.items[id]
+                if (id == action.itemId) {
+                    return {[id]: Object.assign({}, item, {
+                        quantity : ++item.quantity
+                    })}
+                } else {
+                    return {[id]: item }
+                }
+            }))
           })
         }
       break;
