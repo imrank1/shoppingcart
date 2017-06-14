@@ -27,7 +27,6 @@ const initialState = {
  * @returns {{}} - A new state
  */
 function reducer(state = [], action) {
-    debugger;
   switch(action.type) {
       /**
        * Handles adding an item to a cart
