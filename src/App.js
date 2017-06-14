@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import ShoppingCart from './components/ShoppingCart';
-import configureStore from './store.js'
+import ShoppingCartComponent from './components/ShoppingCart';
+import configureStore from './store.js';
+import { Provider } from 'react-redux'
+
 import './App.css';
 
 const store = configureStore();
@@ -13,9 +15,9 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-      <ShoppingCart store={store}/>
-      </div>
+        <Provider store={store}>
+            <ShoppingCartComponent/>
+        </Provider>
     );
   }
 }

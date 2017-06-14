@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import Item from './Item'
+import ItemComponent from './Item'
 import {removeItemFromCart, applyCoupon}  from '../actions.js'
 import '../App.css';
+import { connect } from 'react-redux'
+
 
 
 /**
@@ -11,61 +13,19 @@ import '../App.css';
  */
 
 class ShoppingCart extends Component {
-  constructor(props) {
-    super(props)
-    this.state = props.store.getState()
-  }
-
-    /**
-     * Called after the component has been mounted by React
-     */
-  componentDidMount() {
-    const { store } = this.props;
-
-    // We'll subscribe to changes in the store
-    // The shopping cart cares about the entire store
-    // Every time the state changes we cause a render by setting the state of this component.
-    this.unsubscribe = store.subscribe(() =>
-      this.setState(store.getState())
-    )
-  }
-
-    /**
-     * When the component is about to unmount unsubscribe from store changes.
-     */
-  componentWillUnmount() {
-    this.unsubscribe()
-  }
-
-    /**
-     * Dispatches an action to remove an item from the cart
-     * @param itemId
-     */
-  removeCartItem = (itemId) => {
-    this.props.store.dispatch(removeItemFromCart(itemId))
-  }
-
-    /**
-     * Dispatches an action to apply the entered text as the coupon code
-     * @param e
-     */
-  handleCouponInput = (e) => {
-    this.props.store.dispatch(applyCoupon(e.target.value))
-  }
-
     /**
      * Returns a JSX for the items that have been added to the cart
      * @returns {Array}
      */
   itemsInCart() {
-    return this.state.cartItems.map((cartItem) =>
+    return this.props.cartItems.map((cartItem) =>
       <div key={cartItem.id}> {cartItem.name}, Price: {cartItem.price}, Qty: {cartItem.quantity}
-          <button onClick={() => this.removeCartItem(cartItem.id)}> Remove</button>
+          <button onClick={() => this.props.removeCartItem(cartItem.id)}> Remove</button>
       </div>)
   }
 
   getPercentageOff () {
-      return this.state.hasValidCoupon ? this.state.coupon.percentageOff : 0
+      return this.props.hasValidCoupon ? this.props.coupon.percentageOff : 0
   }
 
     /**
@@ -75,9 +35,9 @@ class ShoppingCart extends Component {
      * @returns {*}
      */
   getCartTotal () {
-    let total = this.state.cartItems.reduce((acc, cartItem) => {return acc + cartItem.quantity * cartItem.price}, 0)
+    let total = this.props.cartItems.reduce((acc, cartItem) => {return acc + cartItem.quantity * cartItem.price}, 0)
 
-    if(this.state.hasValidCoupon) {
+    if(this.props.hasValidCoupon) {
         total = total * this.getPercentageOff();
     }
     return total
@@ -90,20 +50,19 @@ class ShoppingCart extends Component {
      * @returns {JSX}
      */
   render() {
-    const {store} = this.props;
-    let couponKey = this.state.coupon.code === "NONE" ? "" : this.state.coupon.code;
+    let couponKey = this.props.coupon.code === "NONE" ? "" : this.props.coupon.code;
     return (
       <div className="shoppingCart">
-        <Item store={store} id="1"/>
-        <Item store={store} id="2"/>
+        <ItemComponent id="1"/>
+        <ItemComponent id="2"/>
         <div>
-          Items in the cart:{this.state.cartItems.length}
+          Items in the cart:{this.props.cartItems.length}
           <ul>{this.itemsInCart()}</ul>
         </div>
 
 
         <div className="couponSection">
-            Coupon:<input type="text" value={couponKey} onChange={this.handleCouponInput}/>
+            Coupon:<input type="text" value={couponKey} onChange={(e) => this.props.handleCouponInput(e)}/>
         </div>
 
         <div>Total: {this.getCartTotal()}</div>
@@ -113,4 +72,24 @@ class ShoppingCart extends Component {
 }
 
 
-export default ShoppingCart;
+
+const mapStateToProps = (state) => {
+    return state
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        handleCouponInput: (e) => {
+            dispatch(applyCoupon(e.target.value));
+        },
+        removeCartItem: (itemId) => {
+            dispatch(removeItemFromCart(itemId))
+        }
+    }
+}
+const ShoppingCartComponent = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ShoppingCart)
+
+export default ShoppingCartComponent;

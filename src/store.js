@@ -64,6 +64,7 @@ function reducer(state = [], action) {
                 }
               }),
               items: state.items.map((item, index) =>{
+                  debugger;
                   if (item.id == action.itemId) {
                       return Object.assign({}, item, {
                           quantity : --item.quantity
@@ -87,6 +88,7 @@ function reducer(state = [], action) {
           ],
           items: state.items.map((item, index) =>{
             if (item.id == action.itemId) {
+                debugger;
               return Object.assign({}, item, {
                 quantity : --item.quantity
               })
@@ -108,6 +110,7 @@ function reducer(state = [], action) {
        *
        */
       case REMOVE_ITEM_FROM_CART:
+          debugger;
         const cartItem = state.cartItems.find(function(item){
           return item.id == action.itemId
         })
@@ -158,5 +161,6 @@ function reducer(state = [], action) {
  * @returns {Store<S>}
  */
 export default function configureStore() {
-  return createStore(reducer, initialState)
+  return createStore(reducer, initialState,
+      window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 }
